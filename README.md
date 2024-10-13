@@ -14,3 +14,8 @@ To select the version you need simply put it into the features in Cargo.toml
 ``` toml
 mcprot = { path = "...", features = ["1_21_1"] }
 ```
+
+Or the newest version
+``` toml
+mcprot = { path = "...", features = ["default"] }
+```
