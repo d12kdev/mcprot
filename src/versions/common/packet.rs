@@ -2,7 +2,7 @@ use color_eyre::eyre::Result;
 
 use crate::types::{packet::RawPacket, ByteBuffer, VarInt};
 
-
+/// Function to encode packet id and it's payload to ByteBuffer
 pub fn encode_packet(packet_id: i32, payload: ByteBuffer) -> ByteBuffer {
     let mut buffer = ByteBuffer::new();
 
@@ -21,6 +21,7 @@ pub fn encode_packet(packet_id: i32, payload: ByteBuffer) -> ByteBuffer {
     return final_buffer;
 }
 
+/// Function used to get packet id and it's payload from the ByteBuffer
 pub fn decode_packet(buffer: &mut ByteBuffer) -> Result<RawPacket> {
     let _len = buffer.get_varint().unwrap();
 

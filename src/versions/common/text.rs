@@ -40,7 +40,7 @@ impl StyledTextColor {
 
         let code = code.as_str();
 
-        // https://www.digminecraft.com/lists/color_list_pc.php
+        // <https://www.digminecraft.com/lists/color_list_pc.php>
         match code {
             "4" => Self::DarkRed,
             "c" => Self::Red,
@@ -61,11 +61,41 @@ impl StyledTextColor {
             _ => Self::White
         }
     }
+
+
+    fn get_code(&self) -> String {
+        match self {
+            Self::DarkRed => "4",
+            Self::Red => "c",
+            Self::Gold => "6",
+            Self::Yellow => "e",
+            Self::DarkGreen => "2",
+            Self::Green => "a",
+            Self::Aqua => "b",
+            Self::DarkAqua => "3",
+            Self::DarkBlue => "1",
+            Self::Blue => "9",
+            Self::LightPurple => "d",
+            Self::DarkPurple => "5",
+            Self::White => "f",
+            Self::Gray => "7",
+            Self::DarkGray => "8",
+            Self::Black => "0"
+        }.to_string()
+    }
+
+    pub fn to_code(&self) -> String {
+        format!("§{}", self.get_code())
+    }
+
+    pub fn to_code_amperstand(&self) -> String {
+        format!("&{}", self.get_code())
+    }
 }
 
 
-// https://minecraft.wiki/w/Raw_JSON_text_forma
-// https://wiki.vg/Text_formatting#Text_components
+// <https://minecraft.wiki/w/Raw_JSON_text_format>
+// <https://wiki.vg/Text_formatting#Text_components>
 #[derive(Debug, Serialize, Clone)]
 pub struct StyledText {
     pub text: String,
@@ -89,7 +119,7 @@ pub struct StyledText {
     pub obfuscated: Option<bool>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub extra: Option<Vec<Self>>
+    pub extra: Option<Vec<Self>>,
 }
 
 impl Default for StyledText {
@@ -102,7 +132,7 @@ impl Default for StyledText {
             underlined: None,
             strikethrough: None,
             obfuscated: None,
-            extra: None
+            extra: None,
         }
     }
 }
@@ -115,6 +145,129 @@ impl StyledText {
         }
     }
 
+    pub fn to_legacy(&self) -> String {
+        let mut result = String::new();
+        
+        if !self.color.is_none() {
+            let color = self.color.unwrap();
+            result.push_str(&color.to_code());
+        }
+        
+        if !self.bold.is_none() && self.bold.unwrap() {
+            result.push_str("§l");
+        }
+
+        if !self.italic.is_none() && self.italic.unwrap() {
+            result.push_str("§o");
+        }
+
+        if !self.obfuscated.is_none() && self.obfuscated.unwrap() {
+            result.push_str("§k");
+        }
+
+        if !self.strikethrough.is_none() && self.strikethrough.unwrap() {
+            result.push_str("§m");
+        }
+
+        if !self.underlined.is_none() && self.underlined.unwrap() {
+            result.push_str("§n");
+        }
+
+        result.push_str(&self.text);
+
+        if !self.extra.is_none() {
+            for mut ext in self.extra.clone().unwrap() {
+
+                {
+                    if ext.bold.is_none() && !self.bold.is_none() {
+                        ext.bold(self.bold.unwrap());
+                    }
+
+                    if ext.italic.is_none() && !self.italic.is_none() {
+                        ext.italic(self.italic.unwrap());
+                    }
+
+                    if ext.underlined.is_none() && !self.underlined.is_none() {
+                        ext.underlined(self.underlined.unwrap());
+                    }
+
+                    if ext.strikethrough.is_none() && !self.strikethrough.is_none() {
+                        ext.strikethrough(self.strikethrough.unwrap());
+                    }
+
+                    if ext.obfuscated.is_none() && !self.obfuscated.is_none() {
+                        ext.obfuscated(self.obfuscated.unwrap());
+                    }
+                }
+
+                result.push_str(&ext.to_legacy());
+            }
+        }
+
+        result
+    }
+
+    pub fn to_legacy_amperstand(&self) -> String {
+        let mut result = String::new();
+        
+        if !self.color.is_none() {
+            let color = self.color.unwrap();
+            result.push_str(&color.to_code_amperstand());
+        }
+        
+        if !self.bold.is_none() && self.bold.unwrap() {
+            result.push_str("&l");
+        }
+
+        if !self.italic.is_none() && self.italic.unwrap() {
+            result.push_str("&o");
+        }
+
+        if !self.obfuscated.is_none() && self.obfuscated.unwrap() {
+            result.push_str("&k");
+        }
+
+        if !self.strikethrough.is_none() && self.strikethrough.unwrap() {
+            result.push_str("&m");
+        }
+
+        if !self.underlined.is_none() && self.underlined.unwrap() {
+            result.push_str("&n");
+        }
+
+        result.push_str(&self.text);
+
+        if !self.extra.is_none() {
+            for mut ext in self.extra.clone().unwrap() {
+
+                {
+                    if ext.bold.is_none() && !self.bold.is_none() {
+                        ext.bold(self.bold.unwrap());
+                    }
+
+                    if ext.italic.is_none() && !self.italic.is_none() {
+                        ext.italic(self.italic.unwrap());
+                    }
+
+                    if ext.underlined.is_none() && !self.underlined.is_none() {
+                        ext.underlined(self.underlined.unwrap());
+                    }
+
+                    if ext.strikethrough.is_none() && !self.strikethrough.is_none() {
+                        ext.strikethrough(self.strikethrough.unwrap());
+                    }
+
+                    if ext.obfuscated.is_none() && !self.obfuscated.is_none() {
+                        ext.obfuscated(self.obfuscated.unwrap());
+                    }
+                }
+
+                result.push_str(&ext.to_legacy_amperstand());
+            }
+        }
+
+        result
+    }
     
     pub fn add_extra(&mut self, text: StyledText) {
         if let Some(extra_vec) = &mut self.extra {
@@ -164,11 +317,77 @@ impl TextComponent {
         Self(Vec::new())
     }
 
+    pub fn simple(text: String) -> Self {
+        let text = StyledText::new(text);
+        let mut text_list = Vec::new();
+        text_list.push(text);
+        Self(text_list)
+    }
+
     pub fn add(&mut self, text: StyledText) {
         self.0.push(text);
     }
 
+    pub fn to_legacy(&self) -> String {
+        let mut res = String::new();
+
+        for text in self.0.clone() {
+            res.push_str(&text.to_legacy());
+        }
+
+        res
+    }
+
+    pub fn to_legacy_amperstand(&self) -> String {
+        let mut res = String::new();
+
+        for text in self.0.clone() {
+            res.push_str(&text.to_legacy_amperstand());
+        }
+
+        res
+    }
+
     pub fn to_json(&self) -> String {
         serde_json::to_string(self).unwrap().to_string()
+    }
+}
+
+impl From<StyledText> for TextComponent {
+    fn from(value: StyledText) -> Self {
+        let mut list = Vec::new();
+        list.push(value);
+
+        Self(list)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{StyledText, TextComponent};
+
+
+    #[test]
+    fn test_legacy() {
+        let mut component = TextComponent::new();
+        let mut st = StyledText::new("Hi!".to_string());
+        st.bold(true);
+        st.underlined(true);
+        st.color(crate::common::text::StyledTextColor::Gold);
+        component.add(st);
+
+        assert_eq!(component.to_legacy(), "§6§l§nHi!");
+    }
+
+    #[test]
+    fn test_legacy_amperstand() {
+        let mut component = TextComponent::new();
+        let mut st = StyledText::new("Hi!".to_string());
+        st.bold(true);
+        st.underlined(true);
+        st.color(crate::common::text::StyledTextColor::Gold);
+        component.add(st);
+
+        assert_eq!(component.to_legacy_amperstand(), "&6&l&nHi!");
     }
 }

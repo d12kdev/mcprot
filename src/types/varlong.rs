@@ -1,9 +1,11 @@
 use bytes::{Buf, BufMut, BytesMut};
 use color_eyre::eyre::Result;
+use serde::Serialize;
 
 use crate::{consts::encoding::*, errors::VarLongDecoderError};
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+/// Variable-length data encoding a two's complement signed 64-bit integer; <https://wiki.vg/Data_types#VarInt_and_VarLong>
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Serialize)]
 pub struct VarLong {
     value: i64
 }

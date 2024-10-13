@@ -1,6 +1,6 @@
 use thiserror::Error;
 
-
+/// Errors that can happen when decoding VarInt
 #[derive(Error, Debug)]
 pub enum VarIntDecoderError {
     #[error("VarInt is too big")]
@@ -9,6 +9,7 @@ pub enum VarIntDecoderError {
     UnexpectedEndOfBuffer
 }
 
+/// Errors that can happen when decoding VarLong
 #[derive(Error, Debug)]
 pub enum VarLongDecoderError {
     #[error("VarLong is too big")]
@@ -17,6 +18,7 @@ pub enum VarLongDecoderError {
     UnexpectedEndOfBuffer
 }
 
+/// Errors that can happen when decoding String
 #[derive(Error, Debug)]
 pub enum StringDecoderError {
     #[error("String len is bigger than max_size")]

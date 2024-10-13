@@ -1,9 +1,7 @@
-use serde::Serialize;
-
 use crate::{common::{packet::encode_packet, text::TextComponent}, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
 
 
-#[derive(Debug, Serialize)]
+#[derive(Debug)]
 pub struct LoginDisconnect {
     reason: TextComponent
 }

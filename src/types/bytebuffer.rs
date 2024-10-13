@@ -2,11 +2,13 @@ use core::str;
 
 use bytes::{Buf, BufMut, BytesMut};
 use color_eyre::eyre::Result;
+use uuid::Uuid;
 
 use crate::{common::text::TextComponent, errors::{StringDecoderError, VarIntDecoderError, VarLongDecoderError}};
 
-use super::{VarInt, VarLong};
+use super::{Angle, BlockLocation, VarInt, VarLong};
 
+/// BytesMut with support for VarInt, TextComponent etc...
 #[derive(Debug, Clone)]
 pub struct ByteBuffer {
     buffer: BytesMut
@@ -27,7 +29,7 @@ impl ByteBuffer {
         }
     }
 
-    pub fn len(&mut self) -> usize {
+    pub fn len(&self) -> usize {
         self.buffer.len()
     }
 
@@ -46,6 +48,45 @@ impl ByteBuffer {
 impl ByteBuffer {
     pub fn put_slice(&mut self, src: &[u8]) {
         self.buffer.put_slice(src);
+    }
+
+    pub fn get_slice(&mut self) -> ByteBuffer {
+        ByteBuffer::from_buffer(self.buffer.split())
+    }
+
+    pub fn put_block_location(&mut self, bloc: BlockLocation) {
+        bloc.encode(&mut self.buffer);
+    }
+    
+    pub fn get_block_location(&mut self) -> BlockLocation {
+        BlockLocation::decode(&mut self.buffer)
+    }
+
+
+    pub fn copy_to_slice(&mut self, destination: &mut [u8]) {
+        self.buffer.copy_to_slice(destination);
+    }
+
+
+    pub fn put_angle(&mut self, angle: Angle) {
+        self.buffer.put_u8(angle.as_steps());
+    }
+
+    pub fn get_angle(&mut self) -> Angle {
+        Angle::new(self.get_u8())
+    }
+
+
+    pub fn put_uuid(&mut self, uuid: Uuid) {
+        let pair = uuid.as_u64_pair();
+        self.put_u64(pair.0);
+        self.put_u64(pair.1);
+    }
+
+    pub fn get_uuid(&mut self) -> Result<Uuid> {
+        let mut bytes = [0u8; 16];
+        self.copy_to_slice(&mut bytes);
+        Ok(Uuid::from_slice(&bytes).unwrap())
     }
 
 
@@ -73,8 +114,7 @@ impl ByteBuffer {
     }
 
     pub fn put_string(&mut self, value: String) -> Result<(), StringDecoderError> {
-        let utf16_len = value.encode_utf16().count();
-        
+        let utf16_len = value.len();
 
         if utf16_len > (i16::MAX as usize) {
             return Err(StringDecoderError::StringTooBig);
@@ -83,7 +123,7 @@ impl ByteBuffer {
         let utf8_bytes = value.as_bytes();
 
         let varint_len = VarInt::new(utf16_len as i32);
-        self.put_varint(varint_len.clone());
+        self.put_varint(varint_len);
 
         self.buffer.put_slice(utf8_bytes);
 
@@ -120,6 +160,18 @@ impl ByteBuffer {
             Err(())
         }
     }
+
+
+    pub fn get_option<T>(
+        &mut self,
+        val: impl FnOnce(&mut Self) -> Result<T>,
+    ) -> Result<Option<T>> {
+        if self.get_bool() {
+            Ok(Some(val(self)?))
+        } else {
+            Ok(None)
+        }
+    }
 }
 
 // BASIC TYPES
@@ -154,7 +206,6 @@ impl ByteBuffer {
     pub fn put_i128(&mut self, value: i128) {
         self.buffer.put_i128(value);
     }
-
     // USIGNED
 
     pub fn put_u8(&mut self, value: u8) {
@@ -175,6 +226,15 @@ impl ByteBuffer {
 
     pub fn put_u128(&mut self, value: u128) {
         self.buffer.put_u128(value);
+    }
+    
+    
+    pub fn put_f32(&mut self, value: f32) {
+        self.buffer.put_f32(value);
+    }
+
+    pub fn put_f64(&mut self, value: f64) {
+        self.buffer.put_f64(value);
     }
 
     //
@@ -227,6 +287,15 @@ impl ByteBuffer {
 
     pub fn get_u128(&mut self) -> u128 {
         self.buffer.get_u128()
+    }
+
+
+    pub fn get_f32(&mut self) -> f32 {
+        self.buffer.get_f32()
+    }
+
+    pub fn get_f64(&mut self) -> f64 {
+        self.buffer.get_f64()
     }
 }
 

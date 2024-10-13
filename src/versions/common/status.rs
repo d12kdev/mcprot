@@ -1,12 +1,13 @@
 use serde::Serialize;
-use server_status::{ServerDescription, ServerPlayers, ServerVersion};
+use server_status::{ServerPlayers, ServerVersion};
 
+/// ServerStatus is the information shown in the Server List
 #[allow(non_snake_case)]
 #[derive(Debug, Serialize)]
 pub struct ServerStatus {
     pub version: ServerVersion,
     pub players: ServerPlayers,
-    pub description: ServerDescription,
+    pub description: String,
     pub favicon: String,
     pub enforcesSecureChat: bool
 }
@@ -17,9 +18,11 @@ impl ServerStatus {
     }
 }
 
+/// Structs used in ServerStatus
 pub mod server_status {
     use serde::Serialize;
     use uuid::Uuid;
+
 
     #[derive(Debug, Serialize)]
     pub struct ServerVersion {
@@ -40,8 +43,4 @@ pub mod server_status {
         pub id: Uuid
     }
 
-    #[derive(Debug, Serialize)]
-    pub struct ServerDescription {
-        pub text: String
-    }
 }

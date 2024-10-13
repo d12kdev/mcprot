@@ -1,5 +1,6 @@
 use crate::types::VarInt;
 
+/// Connection states
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum ConnectionState {
     Handshake,
