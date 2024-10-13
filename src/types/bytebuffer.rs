@@ -2,9 +2,10 @@ use core::str;
 
 use bytes::{Buf, BufMut, BytesMut};
 use color_eyre::eyre::Result;
+use crab_nbt::Nbt;
 use uuid::Uuid;
 
-use crate::{common::text::TextComponent, errors::{StringDecoderError, VarIntDecoderError, VarLongDecoderError}};
+use crate::{common::{text::TextComponent, Identifier}, errors::{StringDecoderError, VarIntDecoderError, VarLongDecoderError}};
 
 use super::{Angle, BlockLocation, VarInt, VarLong};
 
@@ -52,6 +53,19 @@ impl ByteBuffer {
 
     pub fn get_slice(&mut self) -> ByteBuffer {
         ByteBuffer::from_buffer(self.buffer.split())
+    }
+
+    pub fn put_nbt(&mut self, data: Nbt) {
+        self.put_slice(&data.write_unnamed());
+    }
+
+    pub fn put_identifier(&mut self, identifier: Identifier) {
+        self.put_string(serde_plain::to_string(&identifier).unwrap()).unwrap();
+    }
+
+    pub fn get_identifier(&mut self) -> Result<Identifier> {
+        let res: Identifier = serde_plain::from_str(self.get_string()?.as_str())?;
+        Ok(res)
     }
 
     pub fn put_block_location(&mut self, bloc: BlockLocation) {
