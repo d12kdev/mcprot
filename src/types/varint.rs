@@ -20,6 +20,13 @@ impl VarInt {
         return self.value;
     }
 
+    pub fn len(&self) -> usize {
+        let mut buffer = BytesMut::new();
+        self.encode(&mut buffer);
+
+        buffer.len()
+    }
+
     pub fn decode(buffer: &mut BytesMut) -> Result<Self, VarIntDecoderError> {
         let mut value = 0;
         let mut position = 0;
