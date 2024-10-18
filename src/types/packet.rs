@@ -2,7 +2,7 @@ use color_eyre::eyre::Result;
 
 use super::ByteBuffer;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RawPacket {
     pub packet_id: i32,
     pub payload: ByteBuffer

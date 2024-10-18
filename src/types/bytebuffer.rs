@@ -10,7 +10,7 @@ use crate::{common::{text::TextComponent, Identifier}, errors::{StringDecoderErr
 use super::{Angle, BlockLocation, VarInt, VarLong};
 
 /// BytesMut with support for VarInt, TextComponent etc...
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ByteBuffer {
     buffer: BytesMut
 }

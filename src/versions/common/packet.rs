@@ -1,7 +1,7 @@
-use std::io::Write;
+use std::io::{Cursor, Read, Write};
 
 use color_eyre::eyre::Result;
-use flate2::{write::ZlibEncoder, Compression};
+use flate2::{read::ZlibDecoder, write::ZlibEncoder, Compression};
 
 use crate::types::{packet::RawPacket, ByteBuffer, VarInt};
 
@@ -78,4 +78,59 @@ pub fn decode_packet(buffer: &mut ByteBuffer) -> Result<RawPacket> {
             payload: ByteBuffer::from_buffer(payload)
         }
     )
+}
+
+
+/// Function used to get packet id and its payload (compressed) from the ByteBuffer
+/// Note: I don't know what i'm doing rn, im tired - but it "works" (tests), i don't know if i was reading the docs well
+pub fn decode_packet_compressed(buffer: &mut ByteBuffer) -> Result<RawPacket> {
+    let _packet_len = buffer.get_varint()?.get_value();
+    let size = buffer.get_varint()?.get_value();
+
+    let packet_id: i32;
+    let payload: ByteBuffer;
+
+    if size > 0 {
+        // COMPRESSED
+        let mut decoder = ZlibDecoder::new(Cursor::new(buffer.get_bytesmut()));
+        let mut decompressed = Vec::new();
+        decoder.read_to_end(&mut decompressed)?;
+
+        let mut decompressed = ByteBuffer::from_u8buffer(&decompressed);
+
+        packet_id = decompressed.get_varint()?.get_value();
+        payload = decompressed.get_slice();
+    } else {
+        // NOT COMPRESSED
+        packet_id = buffer.get_varint()?.get_value();
+        payload = ByteBuffer::from_buffer(buffer.get_bytesmut());
+    }
+
+    Ok(
+        RawPacket {
+            packet_id: packet_id,
+            payload: payload
+        }
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{common::packet::decode_packet_compressed, types::{packet::RawPacket, ByteBuffer, VarInt}};
+
+    use super::encode_packet_compress;
+
+
+    #[test]
+    fn encode_decode_compressed() {
+        let mut buffer = ByteBuffer::new();
+        buffer.put_varint(VarInt::new(33));
+        let mut packet = encode_packet_compress(0x00, buffer.clone(), VarInt::new(1));
+        let de_packet = decode_packet_compressed(&mut packet).unwrap();
+
+        assert_eq!(de_packet, RawPacket {
+            packet_id: 0x00,
+            payload: buffer
+        })
+    }
 }
