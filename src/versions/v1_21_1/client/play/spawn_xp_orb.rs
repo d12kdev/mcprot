@@ -1,4 +1,4 @@
-use crate::{common::packet::encode_packet, types::{packet::{ClientPacket, Packet}, ByteBuffer, Location, VarInt}};
+use crate::types::{packet::{ClientPacket, Packet}, ByteBuffer, Location, VarInt};
 
 
 #[derive(Debug)]
@@ -27,7 +27,7 @@ impl SpawnExperienceOrb {
 }
 
 impl ClientPacket for SpawnExperienceOrb {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_varint(self.entity_id);
 
@@ -37,6 +37,6 @@ impl ClientPacket for SpawnExperienceOrb {
 
         buffer.put_i16(self.count);
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

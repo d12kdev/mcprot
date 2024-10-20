@@ -1,4 +1,4 @@
-use crate::{common::{packet::encode_packet, Identifier}, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
+use crate::{common::Identifier, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
 
 
 #[derive(Debug)]
@@ -17,10 +17,10 @@ impl CookieRequest {
 }
 
 impl ClientPacket for CookieRequest {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_identifier(self.key.clone());
         
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

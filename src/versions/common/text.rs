@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-#[derive(Debug, Serialize, Clone, Copy)]
+#[derive(Debug, Serialize, Clone, Copy, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum StyledTextColor {
     DarkRed,
@@ -96,7 +96,7 @@ impl StyledTextColor {
 
 // <https://minecraft.wiki/w/Raw_JSON_text_format>
 // <https://wiki.vg/Text_formatting#Text_components>
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, PartialEq, Eq)]
 pub struct StyledText {
     pub text: String,
 
@@ -309,7 +309,7 @@ impl StyledText {
 }
 
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, PartialEq, Eq)]
 pub struct TextComponent(Vec<StyledText>);
 
 impl TextComponent {

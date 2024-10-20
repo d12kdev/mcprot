@@ -1,4 +1,4 @@
-use crate::{common::packet::encode_packet, protocol::Animation, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
+use crate::{protocol::Animation, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
 
 
 #[derive(Debug)]
@@ -21,11 +21,11 @@ impl EntityAnimation {
 }
 
 impl ClientPacket for EntityAnimation {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_varint(self.entity_id);
         buffer.put_u8(self.animation.into());
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

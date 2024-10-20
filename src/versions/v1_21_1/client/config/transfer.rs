@@ -1,4 +1,4 @@
-use crate::{common::packet::encode_packet, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
+use crate::types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt};
 
 
 #[derive(Debug)]
@@ -18,11 +18,11 @@ impl Transfer {
 }
 
 impl ClientPacket for Transfer {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_string(self.host.clone()).unwrap();
         buffer.put_varint(self.port);
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

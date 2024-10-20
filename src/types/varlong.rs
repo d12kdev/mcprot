@@ -15,6 +15,17 @@ impl VarLong {
         VarLong { value: value }
     }
 
+    pub fn get_value(&self) -> i64 {
+        self.value
+    }
+
+    pub fn len(&self) -> usize {
+        let mut buffer = BytesMut::new();
+        self.encode(&mut buffer);
+
+        buffer.len()
+    }
+
     pub fn decode(buffer: &mut BytesMut) -> Result<Self, VarLongDecoderError> {
         let mut value = 0;
         let mut position = 0;
@@ -38,7 +49,7 @@ impl VarLong {
         return Err(VarLongDecoderError::UnexpectedEndOfBuffer);
     }
 
-    pub fn encode(&mut self, buffer: &mut BytesMut) {
+    pub fn encode(&self, buffer: &mut BytesMut) {
         let mut value = self.value as u64;
 
         loop {
@@ -60,6 +71,19 @@ impl From<i64> for VarLong {
     }
 }
 
+impl From<usize> for VarLong {
+    fn from(value: usize) -> Self {
+        VarLong { value: (value as i64) }
+    }
+}
+
+
+impl Into<i64> for VarLong {
+    fn into(self) -> i64 {
+        self.value
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -67,7 +91,7 @@ mod tests {
     #[test]
     fn test_encode() {
         let mut buf = BytesMut::new();
-        let mut value = VarLong::new(300);
+        let value = VarLong::new(300);
         value.encode(&mut buf);
         assert_eq!(buf.as_ref(), &[0xAC, 0x02]);
     }

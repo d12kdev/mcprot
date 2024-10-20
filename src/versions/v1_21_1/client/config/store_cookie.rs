@@ -1,4 +1,4 @@
-use crate::{common::{packet::encode_packet, Identifier}, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
+use crate::{common::Identifier, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
 
 
 #[derive(Debug)]
@@ -25,12 +25,12 @@ impl StoreCookie {
 }
 
 impl ClientPacket for StoreCookie {
-    fn write(&self) -> ByteBuffer {
+    fn get_payload(&self) -> ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_identifier(self.key.clone());
         buffer.put_varint(self.payload_length);
         buffer.put_slice(self.payload.to_u8());
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

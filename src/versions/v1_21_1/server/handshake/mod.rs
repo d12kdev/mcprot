@@ -14,7 +14,7 @@ impl Packet for Handshake {
 }
 
 impl ServerPacket for Handshake {
-    fn read(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(Self { 
             protocol_version: bytebuffer.get_varint().unwrap(),
             server_address: bytebuffer.get_string_maxsize(255).unwrap(),

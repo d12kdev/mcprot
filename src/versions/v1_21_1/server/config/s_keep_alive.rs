@@ -11,7 +11,7 @@ impl Packet for ServerboundKeepAlive {
 }
 
 impl ServerPacket for ServerboundKeepAlive {
-    fn read(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(
             Self {
                 keep_alive_id: bytebuffer.get_i64()

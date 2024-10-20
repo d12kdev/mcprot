@@ -1,4 +1,4 @@
-use crate::{common::packet::encode_packet, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
+use crate::types::{packet::{ClientPacket, Packet}, ByteBuffer};
 
 #[derive(Debug)]
 pub struct PongResponse {
@@ -16,9 +16,9 @@ impl PongResponse {
 }
 
 impl ClientPacket for PongResponse {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_i64(self.payload);
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

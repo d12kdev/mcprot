@@ -50,7 +50,7 @@ impl VarInt {
         return Err(VarIntDecoderError::UnexpectedEndOfBuffer);
     }
 
-    pub fn encode(self, buffer: &mut BytesMut) {
+    pub fn encode(&self, buffer: &mut BytesMut) {
         let mut value = self.value as u32;
 
         loop {
@@ -69,6 +69,12 @@ impl VarInt {
 impl From<i32> for VarInt {
     fn from(value: i32) -> Self {
         VarInt { value: value }
+    }
+}
+
+impl From<usize> for VarInt {
+    fn from(value: usize) -> Self {
+        VarInt { value: (value as i32) }
     }
 }
 

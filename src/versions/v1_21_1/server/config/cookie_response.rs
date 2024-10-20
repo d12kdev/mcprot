@@ -14,7 +14,7 @@ impl Packet for CookieResponse {
 }
 
 impl ServerPacket for CookieResponse {
-    fn read(bytebuffer: &mut ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut ByteBuffer) -> color_eyre::eyre::Result<Self> {
         let key = bytebuffer.get_identifier()?;
         let has_payload = bytebuffer.get_bool();
         let mut payload_length: Option<VarInt> = None;

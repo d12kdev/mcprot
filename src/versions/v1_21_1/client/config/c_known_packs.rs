@@ -1,4 +1,4 @@
-use crate::{common::packet::encode_packet, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
+use crate::types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt};
 
 #[derive(Debug)]
 struct CKPPack {
@@ -41,7 +41,7 @@ impl ClientboundKnownPacks {
 }
 
 impl ClientPacket for ClientboundKnownPacks {
-    fn write(&self) -> ByteBuffer {
+    fn get_payload(&self) -> ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_varint(self.known_pack_count);
 
@@ -49,6 +49,6 @@ impl ClientPacket for ClientboundKnownPacks {
             buffer.put_slice(pack.encode().to_u8());
         }
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

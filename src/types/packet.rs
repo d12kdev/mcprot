@@ -13,9 +13,9 @@ pub trait Packet {
 }
 
 pub trait ServerPacket: Packet + Sized {
-    fn read(bytebuffer: &mut ByteBuffer) -> Result<Self>;
+    fn decode(bytebuffer: &mut ByteBuffer) -> Result<Self>;
 }
 
 pub trait ClientPacket: Packet {
-    fn write(&self) -> ByteBuffer;
+    fn get_payload(&self) -> ByteBuffer;
 }

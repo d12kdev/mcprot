@@ -11,7 +11,7 @@ impl Packet for ConfirmTeleportation {
 }
 
 impl ServerPacket for ConfirmTeleportation {
-    fn read(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(
             Self {
                 teleport_id: bytebuffer.get_varint().unwrap()

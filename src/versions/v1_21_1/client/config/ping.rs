@@ -1,4 +1,4 @@
-use crate::{common::packet::encode_packet, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
+use crate::types::{packet::{ClientPacket, Packet}, ByteBuffer};
 
 
 #[derive(Debug)]
@@ -17,10 +17,10 @@ impl ConfigPing {
 }
 
 impl ClientPacket for ConfigPing {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_i32(self.id);
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

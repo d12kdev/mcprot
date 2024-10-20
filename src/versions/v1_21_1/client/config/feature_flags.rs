@@ -1,4 +1,4 @@
-use crate::{common::{packet::encode_packet, Identifier}, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
+use crate::{common::Identifier, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
 
 
 #[derive(Debug)]
@@ -21,11 +21,11 @@ impl FeatureFlags {
 }
 
 impl ClientPacket for FeatureFlags {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_varint(self.total_features);
         buffer.put_identifier(self.feature_flags.clone());
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

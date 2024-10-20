@@ -14,7 +14,7 @@ impl Packet for LoginStart {
 }
 
 impl ServerPacket for LoginStart {
-    fn read(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(
             Self {
                 name: bytebuffer.get_string_maxsize(16).unwrap(),

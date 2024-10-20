@@ -10,7 +10,7 @@ impl Packet for PingRequest {
 }
 
 impl ServerPacket for PingRequest {
-    fn read(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(
             Self {
                 payload: bytebuffer.get_i64()

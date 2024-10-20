@@ -1,4 +1,4 @@
-use crate::{common::packet::encode_packet, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
+use crate::types::{packet::{ClientPacket, Packet}, ByteBuffer};
 
 
 #[derive(Debug)]
@@ -15,7 +15,7 @@ impl FinishConfig {
 }
 
 impl ClientPacket for FinishConfig {
-    fn write(&self) -> crate::types::ByteBuffer {
-        encode_packet(Self::PACKET_ID, ByteBuffer::new())
+    fn get_payload(&self) -> crate::types::ByteBuffer {
+        ByteBuffer::new()
     }
 }

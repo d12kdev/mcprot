@@ -26,3 +26,21 @@ pub enum StringDecoderError {
     #[error("UTF-8 Conversion error: {0}")]
     Utf8Error(String)
 }
+
+#[derive(Error, Debug)]
+pub enum PacketEncoderError {
+    #[error("Compression threshold not set")]
+    CompressionThresholdNotSet,
+    #[error("Compression Error: {0}")]
+    CompressionError(#[from] std::io::Error)
+}
+
+#[derive(Error, Debug)]
+pub enum PacketDecoderError {
+    #[error("Compression threshold not set")]
+    CompressionThresholdNotSet,
+    #[error("Decompression Error: {0}")]
+    DecompressionError(#[from] std::io::Error),
+    #[error("Error while decoding: {0}")]
+    VarIntDecodingError(#[from] VarIntDecoderError)
+}

@@ -1,4 +1,4 @@
-use crate::{common::{packet::encode_packet, text::TextComponent}, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
+use crate::{common::text::TextComponent, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
 
 
 #[derive(Debug)]
@@ -17,10 +17,10 @@ impl ConfigDisconnect {
 }
 
 impl ClientPacket for ConfigDisconnect {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_textcomponent(self.reason.clone());
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

@@ -9,7 +9,7 @@ impl Packet for AcknowledgeFinishConfiguration {
 }
 
 impl ServerPacket for AcknowledgeFinishConfiguration {
-    fn read(_bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(_bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(Self)
     }
 }

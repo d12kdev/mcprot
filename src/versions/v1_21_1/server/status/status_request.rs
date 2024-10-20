@@ -9,7 +9,7 @@ impl Packet for StatusRequest {
 }
 
 impl ServerPacket for StatusRequest {
-    fn read(_bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(_bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(
             Self
         )

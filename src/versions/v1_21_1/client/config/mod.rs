@@ -46,5 +46,4 @@ pub use c_known_packs::*;
 mod custom_report_details;
 pub use custom_report_details::*;
 
-mod server_links;
-pub use server_links::*;
+pub mod server_links;

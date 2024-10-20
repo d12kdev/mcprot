@@ -1,6 +1,6 @@
 use crab_nbt::Nbt;
 
-use crate::{common::{packet::encode_packet, Identifier}, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
+use crate::{common::Identifier, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
 
 #[derive(Debug)]
 struct RegistryDataEntry {
@@ -54,7 +54,7 @@ impl RegistryData {
 }
 
 impl ClientPacket for RegistryData {
-    fn write(&self) -> ByteBuffer {
+    fn get_payload(&self) -> ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_identifier(self.registry_id.clone());
         buffer.put_varint(self.entry_count);
@@ -63,6 +63,6 @@ impl ClientPacket for RegistryData {
             buffer.put_slice(entry.encode().to_u8());
         }
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

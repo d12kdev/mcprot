@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::{common::packet::encode_packet, protocol::Entity, types::{packet::{ClientPacket, Packet}, Angle, ByteBuffer, Location, VarInt}};
+use crate::{protocol::Entity, types::{packet::{ClientPacket, Packet}, Angle, ByteBuffer, Location, VarInt}};
 
 #[derive(Debug)]
 pub struct SpawnEntity {
@@ -56,7 +56,7 @@ impl SpawnEntity {
 }
 
 impl ClientPacket for SpawnEntity {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_varint(self.entity_id);
         buffer.put_uuid(self.entity_uuid);
@@ -76,6 +76,6 @@ impl ClientPacket for SpawnEntity {
         buffer.put_i16(self.velocity_y);
         buffer.put_i16(self.velocity_z);
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

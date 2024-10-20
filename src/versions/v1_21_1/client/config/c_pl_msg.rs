@@ -1,4 +1,4 @@
-use crate::{common::{packet::encode_packet, Identifier}, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
+use crate::{common::Identifier, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
 
 
 #[derive(Debug)]
@@ -18,11 +18,11 @@ impl ClientboundPluginMessage {
 }
 
 impl ClientPacket for ClientboundPluginMessage {
-    fn write(&self) -> ByteBuffer {
+    fn get_payload(&self) -> ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_identifier(self.channel.clone());
         buffer.put_slice(self.data.to_u8());
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

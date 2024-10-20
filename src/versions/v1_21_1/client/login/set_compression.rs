@@ -1,4 +1,4 @@
-use crate::{common::packet::encode_packet, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
+use crate::types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt};
 
 
 #[derive(Debug)]
@@ -17,9 +17,9 @@ impl SetCompression {
 }
 
 impl ClientPacket for SetCompression {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_varint(self.threshold);
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

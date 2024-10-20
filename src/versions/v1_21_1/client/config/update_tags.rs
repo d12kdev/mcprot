@@ -1,4 +1,4 @@
-use crate::{common::{packet::encode_packet, Identifier}, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
+use crate::{common::Identifier, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
 
 
 #[derive(Debug)]
@@ -72,7 +72,7 @@ impl UpdateTags {
 }
 
 impl ClientPacket for UpdateTags {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_varint(self.tag_array_length);
         
@@ -80,6 +80,6 @@ impl ClientPacket for UpdateTags {
             buffer.put_slice(registry.encode().to_u8());
         }
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

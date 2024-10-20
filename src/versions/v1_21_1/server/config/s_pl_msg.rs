@@ -12,7 +12,7 @@ impl Packet for ServerPluginMessage {
 }
 
 impl ServerPacket for ServerPluginMessage {
-    fn read(bytebuffer: &mut ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(
             Self { channel: bytebuffer.get_identifier()?, data: bytebuffer.get_slice() }
         )

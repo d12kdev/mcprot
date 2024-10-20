@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::{common::{packet::encode_packet, text::TextComponent}, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
+use crate::{common::text::TextComponent, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
 
 
 #[derive(Debug)]
@@ -33,7 +33,7 @@ impl AddResourcepack {
 }
 
 impl ClientPacket for AddResourcepack {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_uuid(self.uuid);
         buffer.put_string(self.url.clone()).unwrap();
@@ -45,6 +45,6 @@ impl ClientPacket for AddResourcepack {
             buffer.put_textcomponent(self.prompt_message.clone().unwrap());
         }
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

@@ -12,7 +12,7 @@ impl Packet for QueryBlockEntityTag {
 }
 
 impl ServerPacket for QueryBlockEntityTag {
-    fn read(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(
             Self {
                 transaction_id: bytebuffer.get_varint().unwrap(),

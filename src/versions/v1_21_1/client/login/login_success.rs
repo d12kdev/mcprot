@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::{common::packet::encode_packet, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
+use crate::types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt};
 
 #[derive(Debug, Clone)]
 struct LoginSuccessProperty {
@@ -66,7 +66,7 @@ impl LoginSuccess {
 }
 
 impl ClientPacket for LoginSuccess {
-    fn write(&self) -> ByteBuffer {
+    fn get_payload(&self) -> ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_uuid(self.uuid);
         buffer.put_string(self.username.clone()).unwrap();
@@ -78,6 +78,6 @@ impl ClientPacket for LoginSuccess {
 
         buffer.put_bool(self.strict_error_handling);
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

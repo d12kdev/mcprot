@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::{common::packet::encode_packet, types::{packet::{ClientPacket, Packet}, ByteBuffer}};
+use crate::types::{packet::{ClientPacket, Packet}, ByteBuffer};
 
 
 #[derive(Debug)]
@@ -22,7 +22,7 @@ impl RemoveResourcepack {
 }
 
 impl ClientPacket for RemoveResourcepack {
-    fn write(&self) -> crate::types::ByteBuffer {
+    fn get_payload(&self) -> crate::types::ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_bool(self.has_uuid);
 
@@ -30,6 +30,6 @@ impl ClientPacket for RemoveResourcepack {
             buffer.put_uuid(self.uuid.clone().unwrap());
         }
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

@@ -14,7 +14,7 @@ impl Packet for EncryptionResponse {
 }
 
 impl ServerPacket for EncryptionResponse {
-    fn read(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         let shared_secret_length = bytebuffer.get_varint().unwrap();
         let shared_secret = bytebuffer.copy_to_bytes(shared_secret_length.get_value() as usize).unwrap();
         let verify_token_lenght = bytebuffer.get_varint().unwrap();

@@ -11,7 +11,7 @@ impl Packet for ConfigPong {
 }
 
 impl ServerPacket for ConfigPong {
-    fn read(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(
             Self {
                 id: bytebuffer.get_i32()

@@ -14,7 +14,7 @@ impl Packet for ResourcePackResponse {
 }
 
 impl ServerPacket for ResourcePackResponse {
-    fn read(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(
             Self {
                 uuid: bytebuffer.get_uuid()?,

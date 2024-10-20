@@ -1,4 +1,4 @@
-use crate::{common::packet::encode_packet, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
+use crate::types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt};
 
 #[derive(Debug)]
 struct CRPDetail {
@@ -39,7 +39,7 @@ impl CustomReportDetails {
 }
 
 impl ClientPacket for CustomReportDetails {
-    fn write(&self) -> ByteBuffer {
+    fn get_payload(&self) -> ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_varint(self.details_count);
 
@@ -47,6 +47,6 @@ impl ClientPacket for CustomReportDetails {
             buffer.put_slice(detail.encode().to_u8());
         }
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

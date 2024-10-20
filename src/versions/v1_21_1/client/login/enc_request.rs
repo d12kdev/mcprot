@@ -1,4 +1,4 @@
-use crate::{common::packet::encode_packet, types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt}};
+use crate::types::{packet::{ClientPacket, Packet}, ByteBuffer, VarInt};
 
 
 #[derive(Debug)]
@@ -37,7 +37,7 @@ impl EncryptionRequest {
 }
 
 impl ClientPacket for EncryptionRequest {
-    fn write(&self) -> ByteBuffer {
+    fn get_payload(&self) -> ByteBuffer {
         let mut buffer = ByteBuffer::new();
         buffer.put_string(self.server_id.clone()).unwrap();
         buffer.put_varint(self.public_key_length);
@@ -46,6 +46,6 @@ impl ClientPacket for EncryptionRequest {
         buffer.put_slice(self.verify_token.to_u8());
         buffer.put_bool(self.should_authenticate);
 
-        encode_packet(Self::PACKET_ID, buffer)
+        buffer
     }
 }

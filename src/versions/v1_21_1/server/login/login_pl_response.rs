@@ -13,7 +13,7 @@ impl Packet for LoginPluginResponse {
 }
 
 impl ServerPacket for LoginPluginResponse {
-    fn read(bytebuffer: &mut ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(
             Self {
                 message_id: bytebuffer.get_varint().unwrap(),

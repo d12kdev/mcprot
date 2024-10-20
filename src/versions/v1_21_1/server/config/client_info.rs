@@ -18,7 +18,7 @@ impl Packet for ClientInfo {
 }
 
 impl ServerPacket for ClientInfo {
-    fn read(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
+    fn decode(bytebuffer: &mut crate::types::ByteBuffer) -> color_eyre::eyre::Result<Self> {
         Ok(
             Self {
                 locale: bytebuffer.get_string_maxsize(16)?,
